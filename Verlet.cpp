@@ -185,10 +185,10 @@ int main() {
 
             }
 
-            for (int j = 0; j < N; j++)
+            for (int j = 0; j < i; j++)
             {
                 particle_distance = NIC(Pos[1][i],Pos[1][j]);
-                if (j != i && particle_distance < rc)
+                if (particle_distance < rc)
                 {
                     Potencial_energy += U(particle_distance);
                 }
@@ -196,7 +196,7 @@ int main() {
 
             v = NIC(Pos[2][i],Pos[0][i]) / (2.*timestep);
             Kinetic_energy += 0.5*m*v*v;
-            Total_energy += Potencial_energy + Kinetic_energy;
+
 
             for (int k = 0; k < 3; k++)
             {
@@ -205,6 +205,8 @@ int main() {
             }
 
         }
+
+        Total_energy = Potencial_energy + Kinetic_energy;
 
         energy << t+1 << "\t" << Potencial_energy << "\t" << Kinetic_energy << "\t" << Total_energy << endl;
 
