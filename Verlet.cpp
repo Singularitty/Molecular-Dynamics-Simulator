@@ -185,7 +185,7 @@ int main() {
 
             }
 
-            for (int j = 0; j < i; j++)
+            for (int j = i+1; j < N; j++)
             {
                 particle_distance = NIC(Pos[1][i],Pos[1][j]);
                 if (particle_distance < rc)
