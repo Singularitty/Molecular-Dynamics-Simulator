@@ -6,15 +6,15 @@
 using namespace std;
 
 // Simulation Parameters
-int N = 4*pow(3,3);         // Number of particles
+int N = 4*pow(3,3);       // Number of particles
 double sigma = 1.0;         // Dispersion energy (energy units)
 double epsilon = 1.0;       // Size of the particle (distance units)
 double rc = 2.5;            // Cutoff radius (distance units)
 double m = 1.0;             // Mass
-double box[3] = {30.0,30.0,30.0};  // Dimensions of Simulation Box
-double timestep = 1.e-6 / 20.;  // Timestep
-int Num_Steps = 1e+4;           // Number of Timesteps
-double inicial_max_displacement = 1.e-8;
+double box[3] = {10.0,10.0,10.0};  // Dimensions of Simulation Box
+double timestep = 1.e-5 / 20.;  // Timestep
+int Num_Steps = 1e+5;           // Number of Timesteps
+double inicial_max_displacement = 1.e-5; // Determines the inicial velocity of the particles
 
 // Lennard Jones Potential
 
@@ -39,7 +39,7 @@ double f(double pos1[3], double pos2[3], int direction) {
     z = z - box[2]*round(z/box[2]);
     if (direction == 0) dir = x;
     if (direction == 1) dir = y;
-    else dir = z;
+    if (direction == 2) dir = z;
 
     f = -1.*((-4.*epsilon*((6.*pow(sigma,6))/pow(rc,7) - (12.*pow(sigma,12))/pow(rc,13))*dir)/sqrt(pow(x,2) + pow(y,2) + pow(z,2)) + 
     4.*epsilon*((-12.*pow(sigma,12)*dir)/pow(pow(x,2) + pow(y,2) + pow(z,2),7) + (6.*pow(sigma,6)*dir)/pow(pow(x,2) + pow(y,2) + pow(z,2),4)));
@@ -59,6 +59,7 @@ double r(double pos1[3], double pos2[3]) {
 double NIC(double pos1[3],double pos2[3]) {
     
     double x, y, z;
+
     x = pos1[0] - pos2[0];
     x = x - box[0]*round(x/box[0]);
     y = pos1[1] - pos2[1];
@@ -67,7 +68,6 @@ double NIC(double pos1[3],double pos2[3]) {
     z = z - box[2]*round(z/box[2]);
 
     return sqrt(x*x + y*y + z*z);
-
 }
 
 int main() {
@@ -86,6 +86,24 @@ int main() {
     bool Colision;
 
     cout << "Generating Particles...\n";
+
+/*     Pos[0][0][0] = 1.;
+    Pos[0][0][1] = 0.;
+    Pos[0][0][2] = 0.;
+
+    Pos[1][0][0] = 1.00001;
+    Pos[1][0][1] = 0.;
+    Pos[1][0][2] = 0.;
+
+    Pos[0][1][0] = 3.;
+    Pos[0][1][1] = 0.;
+    Pos[0][1][2] = 0.;
+
+    Pos[1][1][0] = 2.99999;
+    Pos[1][1][1] = 0.;
+    Pos[1][1][2] = 0.; */
+
+
     for (int i = 0; i < N; i++)
     {
         if (i == 0)
@@ -136,10 +154,10 @@ int main() {
     positions << 0 << "\t" << box[0] << endl;
     positions << 0 << "\t" << box[1] << endl;
     positions << 0 << "\t" << box[2] << endl;
-    positions << "ITEM: ATOMS x y z" << endl;
+    positions << "ITEM: ATOMS id x y z" << endl;
     for (int i = 0; i < N; i++)
         {
-            positions << Pos[0][i][0] << "\t" << Pos[0][i][1] << "\t" << Pos[0][i][2] << endl;
+            positions << i << "\t" << Pos[0][i][0] << "\t" << Pos[0][i][1] << "\t" << Pos[0][i][2] << endl;
         }
     positions << "ITEM: TIMESTEP\n" << 1 << endl;
     positions << "ITEM: NUMBER OF ATOMS\n" << N << endl;
@@ -147,10 +165,10 @@ int main() {
     positions << 0 << "\t" << box[0] << endl;
     positions << 0 << "\t" << box[1] << endl;
     positions << 0 << "\t" << box[2] << endl;
-    positions << "ITEM: ATOMS x y z" << endl;
+    positions << "ITEM: ATOMS id x y z" << endl;
     for (int i = 0; i < N; i++)
         {
-            positions << Pos[1][i][0] << "\t" << Pos[1][i][1] << "\t" << Pos[1][i][2] << endl;
+            positions << i << "\t" << Pos[1][i][0] << "\t" << Pos[1][i][1] << "\t" << Pos[1][i][2] << endl;
         }
 
     // Verlet Algorithm
@@ -207,19 +225,19 @@ int main() {
         }
 
         Total_energy = Potencial_energy + Kinetic_energy;
-
+        //if (t % 100 == 0)
         energy << t+1 << "\t" << Potencial_energy << "\t" << Kinetic_energy << "\t" << Total_energy << endl;
-
+        
         positions << "ITEM: TIMESTEP\n" << t+2 << endl;
         positions << "ITEM: NUMBER OF ATOMS\n" << N << endl;
         positions << "ITEM: BOX BOUNDS pp pp pp" << endl;
         positions << 0 << "\t" << box[0] << endl;
         positions << 0 << "\t" << box[1] << endl;
         positions << 0 << "\t" << box[2] << endl;
-        positions << "ITEM: ATOMS x y z" << endl;
+        positions << "ITEM: ATOMS id x y z" << endl;
         for (int i = 0; i < N; i++)
         {
-            positions << Pos[2][i][0] << "\t" << Pos[2][i][1] << "\t" << Pos[2][i][2] << endl;
+            positions << i << "\t" << Pos[2][i][0] << "\t" << Pos[2][i][1] << "\t" << Pos[2][i][2] << endl;
         }
     }
 
