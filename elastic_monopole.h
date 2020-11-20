@@ -7,6 +7,7 @@ using namespace std;
 
 double pi = M_PI;
 
+// Elastic Monopole same momentum (Equivalent to Eletrostatic Monopole)
 double U(double r)
 {
     double U;
