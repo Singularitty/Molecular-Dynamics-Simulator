@@ -27,7 +27,7 @@ double b = 1.;    // Momentum
 double r_eff = 1.;    // Efective radius
 double rc = 3.;     // Cutoff radius
 double k = 1.;
-#include "elastic_multipole.h"
+#include "elastic_monopole.h"
 
 // Nearest Image Convention
 double NIC(double pos1[3],double pos2[3]) {
