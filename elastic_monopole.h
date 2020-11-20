@@ -1,5 +1,4 @@
 //Elastic Multipole Pair Interaction for Nematic Colloids
-
 #include <iostream>
 #include <math.h>
 
