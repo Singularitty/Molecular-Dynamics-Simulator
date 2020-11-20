@@ -28,7 +28,8 @@ double rc = 2.5;            // Cutoff radius (distance units)
 
 
 // Elastic Multipole 
-double b = 1.;    // Momentum
+double b_1 = 1.;    // Momentum
+double b_2 = -1.;   // Momentum
 double r_eff = 1.;    // Efective radius
 double rc = 3.;     // Cutoff radius
 double k = 1.;
