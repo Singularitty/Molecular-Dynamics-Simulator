@@ -7,53 +7,27 @@ using namespace std;
 
 // Simulation Parameters
 int N = 4*pow(3,3);       // Number of particles
-double sigma = 1.0;         // Dispersion energy (energy units)
-double epsilon = 1.0;       // Size of the particle (distance units)
-double rc = 2.5;            // Cutoff radius (distance units)
-double m = 1.0;             // Mass
 double box[3] = {10.0,10.0,10.0};  // Dimensions of Simulation Box
-double timestep = 1.e-5 / 20.;  // Timestep
-int Num_Steps = 1e+5;           // Number of Timesteps
+double timestep = 1.e-5 / 20.;     // Timestep
+int Num_Steps = 1e+5;              // Number of Timesteps
 double inicial_max_displacement = 1.e-5; // Determines the inicial velocity of the particles
+double sigma = 1.0;         // Size of the particle (distance units)
+double m = 1.0;             // Mass
 
-// Lennard Jones Potential
+/* 
+// Lennard Jonnes Potential
+double epsilon = 1.0;       // Dispersion energy (energy units)
+double rc = 2.5;            // Cutoff radius (distance units)
+#include "Lennard_Jonnes.h"
+ */
 
-double U(double r) {
 
-    double U;
-    U = 4.*epsilon*(-(pow(sigma,6)/pow(r,6)) + pow(sigma,12)/pow(r,12)) - 4.*epsilon*(r - rc)*((6.*pow(sigma,6))/pow(rc,7) - (12.*pow(sigma,12))/pow(rc,13)) - 
-    4.*epsilon*(-(pow(sigma,6)/pow(rc,6)) + pow(sigma,12)/pow(rc,12));
-    
-    return U;
-}
-
-double f(double pos1[3], double pos2[3], int direction) {
-
-    double f;
-    double x,y,z, dir;
-    x = pos1[0] - pos2[0];
-    x = x - box[0]*round(x/box[0]);
-    y = pos1[1] - pos2[1];
-    y = y - box[1]*round(y/box[1]);
-    z = pos1[2] - pos2[2];
-    z = z - box[2]*round(z/box[2]);
-    if (direction == 0) dir = x;
-    if (direction == 1) dir = y;
-    if (direction == 2) dir = z;
-
-    f = -1.*((-4.*epsilon*((6.*pow(sigma,6))/pow(rc,7) - (12.*pow(sigma,12))/pow(rc,13))*dir)/sqrt(pow(x,2) + pow(y,2) + pow(z,2)) + 
-    4.*epsilon*((-12.*pow(sigma,12)*dir)/pow(pow(x,2) + pow(y,2) + pow(z,2),7) + (6.*pow(sigma,6)*dir)/pow(pow(x,2) + pow(y,2) + pow(z,2),4)));
-
-    return f;
-}
-
-double r(double pos1[3], double pos2[3]) {
-    
-    double r;
-    r = sqrt(pow((pos1[0]-pos2[0]),2)+pow((pos1[1]-pos2[1]),2)+pow((pos1[2]-pos2[2]),2));
-
-    return r;
-}
+// Elastic Multipole 
+double b = 1.;    // Momentum
+double r_eff = 1.;    // Efective radius
+double rc = 3.;     // Cutoff radius
+double k = 1.;
+#include "elastic_multipole.h"
 
 // Nearest Image Convention
 double NIC(double pos1[3],double pos2[3]) {
@@ -68,6 +42,15 @@ double NIC(double pos1[3],double pos2[3]) {
     z = z - box[2]*round(z/box[2]);
 
     return sqrt(x*x + y*y + z*z);
+}
+
+// Distance Between two points
+double r(double pos1[3], double pos2[3]) {
+    
+    double r;
+    r = sqrt(pow((pos1[0]-pos2[0]),2)+pow((pos1[1]-pos2[1]),2)+pow((pos1[2]-pos2[2]),2));
+
+    return r;
 }
 
 int main() {
@@ -86,23 +69,6 @@ int main() {
     bool Colision;
 
     cout << "Generating Particles...\n";
-
-/*     Pos[0][0][0] = 1.;
-    Pos[0][0][1] = 0.;
-    Pos[0][0][2] = 0.;
-
-    Pos[1][0][0] = 1.00001;
-    Pos[1][0][1] = 0.;
-    Pos[1][0][2] = 0.;
-
-    Pos[0][1][0] = 3.;
-    Pos[0][1][1] = 0.;
-    Pos[0][1][2] = 0.;
-
-    Pos[1][1][0] = 2.99999;
-    Pos[1][1][1] = 0.;
-    Pos[1][1][2] = 0.; */
-
 
     for (int i = 0; i < N; i++)
     {
@@ -225,8 +191,8 @@ int main() {
         }
 
         Total_energy = Potencial_energy + Kinetic_energy;
-        //if (t % 100 == 0)
-        energy << t+1 << "\t" << Potencial_energy << "\t" << Kinetic_energy << "\t" << Total_energy << endl;
+        if (t % 100 == 0)
+            energy << t+1 << "\t" << Potencial_energy << "\t" << Kinetic_energy << "\t" << Total_energy << endl;
         
         positions << "ITEM: TIMESTEP\n" << t+2 << endl;
         positions << "ITEM: NUMBER OF ATOMS\n" << N << endl;
