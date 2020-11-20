@@ -14,6 +14,11 @@ double inicial_max_displacement = 1.e-5; // Determines the inicial velocity of t
 double sigma = 1.0;         // Size of the particle (distance units)
 double m = 1.0;             // Mass
 
+
+/* #######################################################################
+    Uncomment which potential you want to use and comment the other one.
+*/ #######################################################################
+
 /* 
 // Lennard Jonnes Potential
 double epsilon = 1.0;       // Dispersion energy (energy units)
@@ -28,6 +33,7 @@ double r_eff = 1.;    // Efective radius
 double rc = 3.;     // Cutoff radius
 double k = 1.;
 #include "elastic_monopole.h"
+
 
 // Nearest Image Convention
 double NIC(double pos1[3],double pos2[3]) {
