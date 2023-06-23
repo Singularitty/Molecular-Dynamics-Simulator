@@ -20,7 +20,7 @@ double U(double r)
 double f(double pos1[3], double pos2[3], int direction)
 {
     double f;
-    double x,y,z, dir;
+    double x,y,z, dir = 0;
     x = pos1[0] - pos2[0];
     x = x - box[0]*round(x/box[0]);
     y = pos1[1] - pos2[1];
