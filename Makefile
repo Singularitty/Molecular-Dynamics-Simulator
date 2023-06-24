@@ -5,8 +5,11 @@ CC := g++
 CFLAGS := -std=c++11 -Wall -Werror -Wextra -pedantic -march=native -O2 -ftree-vectorize -fopt-info-vec -ffast-math
 #CFLAGS := -std=c++11 -Wall -Werror -Wextra -pedantic
 
+# Libraries
+LIBS := -lm
+
 # Source files
-SRCS := Verlet.cpp
+SRCS := verlet.cpp elastic_monopole.cpp
 
 # Object files
 OBJS := $(SRCS:.cpp=.o)
@@ -20,7 +23,7 @@ $(EXEC): $(OBJS)
 
 # Rule to compile source files
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(LIBS)
 
 # Rule to clean the project
 clean:

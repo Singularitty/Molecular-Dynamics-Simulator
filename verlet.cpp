@@ -1,39 +1,10 @@
-#include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <math.h>
+#include "params.h"
+#include "elastic_monopole.h"
+//#include "lennard_jonnes.h"
 
 using namespace std;
-
-// Simulation Parameters
-int N = 4*pow(3,3);       // Number of particles
-double box[3] = {10.0,10.0,10.0};  // Dimensions of Simulation Box
-double timestep = 1.e-5 / 20.;     // Timestep
-int Num_Steps = 1e+5;              // Number of Timesteps
-double inicial_max_displacement = 1.e-5; // Determines the inicial velocity of the particles
-double sigma = 1.0;         // Size of the particle (distance units)
-double m = 1.0;             // Mass
-
-
-/* #######################################################################
-    Uncomment which potential you want to use and comment the other one.
-   ####################################################################### */
-
-/* 
-// Lennard Jonnes Potential
-double epsilon = 1.0;       // Dispersion energy (energy units)
-double rc = 2.5;            // Cutoff radius (distance units)
-#include "Lennard_Jonnes.h"
- */
-
-
-// Elastic Multipole 
-double b = 1.;    // Momentum
-double r_eff = 1.;    // Efective radius
-double rc = 3.;     // Cutoff radius
-double k = 1.;
-#include "elastic_monopole.h"
-
 
 // Nearest Image Convention
 double NIC(double pos1[3],double pos2[3]) {
@@ -167,7 +138,7 @@ int main() {
                     particle_distance = NIC(Pos[1][i],Pos[1][j]);
                     if (j != i && particle_distance < rc)
                     {
-                        a += f(Pos[1][i],Pos[1][j],k);
+                        a += f(Pos[1][i], Pos[1][j], k, box, b, k, r_eff, rc);
                     }
                 }
 
@@ -180,7 +151,7 @@ int main() {
                 particle_distance = NIC(Pos[1][i],Pos[1][j]);
                 if (particle_distance < rc)
                 {
-                    Potencial_energy += U(particle_distance);
+                    Potencial_energy += U(particle_distance, b, k, r_eff, rc);
                 }
             }
 
