@@ -1,0 +1,17 @@
+### SimulationEngine Settings ###
+
+PARTICLES=100
+BOX=10.0
+TIMESTEP=5.e-6
+STEPS=10000
+DISPLACEMENT=1.e-5
+PARTICLE_SIZE=1.0
+MASS=1.0
+
+### Potential Settings ###
+
+POTENTIAL=ElasticMonopole
+MOMENTUM=1.0
+EFFECTIVE_RADIUS 1.0
+CUTOFF=3.0
+K=1.0
